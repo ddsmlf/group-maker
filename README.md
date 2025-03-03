@@ -1,172 +1,167 @@
-# Programme de formation de groupes
+# Group Formation Program
 
-Ce programme permet de former des groupes en se basant les réponses d'un Google Form. Le script propose plusieurs méthodes d'optimisation : le **clustering hiérarchique**, le **recuit simulé** et le **groupement par affinité mutuelle**.
+This program allows the formation of groups based on responses from a Google Form. The script offers several optimization methods: **hierarchical clustering**, **simulated annealing**, and **mutual affinity grouping**.
 
-## Table des matières
+## Table of Contents
 
-1. [Prévention](#prévention)
-2. [Utilisation du script](#utilisation-du-script)
-3. [Matrice d'affinité](#matrice-daffinité)
-4. [Méthodes de formation des groupes](#méthodes-de-formation-des-groupes)
-   - [Clustering hiérarchique](#clustering-hiérarchique)
-   - [Recuit simulé](#recuit-simulé)
-   - [Groupement par affinité mutuelle](#groupement-par-affinité-mutuelle)
+1. [Disclaimer](#disclaimer)
+2. [Using the Script](#using-the-script)
+3. [Affinity Matrix](#affinity-matrix)
+4. [Group Formation Methods](#group-formation-methods)
+   - [Hierarchical Clustering](#hierarchical-clustering)
+   - [Simulated Annealing](#simulated-annealing)
+   - [Mutual Affinity Grouping](#mutual-affinity-grouping)
 5. [Contributions](#contributions)
-6. [Licence](#licence)
+6. [License](#license)
 
-## Prévention
+## Disclaimer
 
-L'objectif de ce programme est de simplifier la constitution des groupes par affinités. Le script fourni utilise une matrice d'affinité pour représenter les préférences entre étudiants et propose différentes méthodes pour optimiser la formation de ces groupes. Cependant, malgrès la tentative de trouver des compris sur les algorithmes utilisé, l'utilisation d'algorithmes pour la formation de groupes comporte toujours des risques :
+The goal of this program is to simplify the formation of groups based on affinities. The provided script uses an affinity matrix to represent preferences between students and offers different methods to optimize the formation of these groups. However, despite attempts to find compromises in the algorithms used, using algorithms for group formation always carries risks:
 
-- **Élèves isolés** : Certains étudiants peuvent se retrouver isolés si leurs affinités avec les autres sont faibles.
-- **Choix incohérents** : Les résultats peuvent parfois sembler incohérents ou injustes selon l'algorithme choisis pour car des compris doivent être fais et sont parfois difficilement automatisable.
-- **Erreurs de développement** : Des bugs dans le script peuvent entraîner des répartitions incorrectes ou inefficaces. Il ets important de vérifier les résultats obtenus avec les personnes concernées.
-- **Dépendance aux données** : La qualité des groupes formés dépend fortement de la précision et de la fiabilité des données d'affinité fournies. En cas de manque d'impliquation des étudiants ou de données falsifiées, les résultats peuvent être gravement affectés.
+- **Isolated Students**: Some students may end up isolated if their affinities with others are low.
+- **Inconsistent Choices**: Results may sometimes seem inconsistent or unfair depending on the chosen algorithm, as compromises must be made and are sometimes difficult to automate.
+- **Development Errors**: Bugs in the script can lead to incorrect or inefficient distributions. It is important to verify the results obtained with the concerned parties.
+- **Data Dependency**: The quality of the formed groups heavily depends on the accuracy and reliability of the provided affinity data. In case of lack of student involvement or falsified data, the results can be severely affected.
 
 <span style="color:red; font-weight:bold;">
-Il est donc important de vérifier et de valider les résultats obtenus par ces algorithmes et, si nécessaire, d'ajuster manuellement les groupes pour garantir une répartition équitable et efficace.
+It is therefore important to verify and validate the results obtained by these algorithms and, if necessary, manually adjust the groups to ensure a fair and effective distribution.
 </span>
 
+## Using the Script
 
-## Utilisation du script
+### Prerequisites
 
-### Prérequis
-
-Avant d'exécuter le script, assurez-vous d’avoir installé les bibliothèques nécessaires :
+Before running the script, make sure you have installed the necessary libraries:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Récupération des données
+### Data Retrieval
 
-Les voeux des étudiants doivent être stockés dans un fichier CSV. Les noms des etudiants doivent toujours être au format nom-prenom. La dernière colonne du CSV devra toujours correspondre au nom-prenom de l'étudiant et l'avant dernière colonne devra correspondre à la liste des étudiants avec lesquels il souhaite être en groupe séparé par des espaces et par ordre de préférence (le premier étudiant étant celui avec lequel il préfère être en groupe). Un étudiant peut soumettre autant de voeux qu'il le souhaite.
+Students' preferences must be stored in a CSV file. The students' names should always be in the format lastname-firstname. The last column of the CSV should always correspond to the student's lastname-firstname, and the second-to-last column should correspond to the list of students they wish to be grouped with, separated by spaces and in order of preference (the first student being the one they prefer to be grouped with). A student can submit as many preferences as they wish.
 
-pour obtenir facilement ce CSV il ets recommandé d'utilisé un Google Form tel que celui-ci : [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSf1Q6) et de récupérer les réponses sous forme de CSV grâce à Google Sheets.
+To easily obtain this CSV, it is recommended to use a Google Form like this one: [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSdwULMnEmbYJo17J9D_oSJdKUfqPLXAScK1BSbYCJyS2hoRyw/viewform?usp=header) and retrieve the responses in CSV format using Google Sheets.
 
-### Exécution
-Le script peut être exécuté via la ligne de commande en spécifiant le fichier contenant les voeux des étudiants :
+### Execution
+
+The script can be run via the command line by specifying the file containing the students' preferences:
 
 ```bash
-python main.py input.csv 4 -a recuit -o groupes.csv -v -p
+python main.py input.csv 4 -a annealing -o groups.csv -v -p
 ```
 
-Les options disponibles pour `-a` ou `--algorithm` sont :
-- `hierarchical` pour le clustering hiérarchique,
-- `simulated_annealing` pour le recuit simulé,
-- `affinity_grouping` pour le groupement par affinité mutuelle,
-- `random` pour une répartition aléatoire.
+The available options for `-a` or `--algorithm` are:
+- `hierarchical` for hierarchical clustering,
+- `simulated_annealing` for simulated annealing,
+- `affinity_grouping` for mutual affinity grouping,
+- `random` for random distribution.
 
-Les autres options sont :
-- `-o` ou `--output_file` pour spécifier le fichier de sortie (par défaut `groups.csv`),
-- `-p` ou `--plot` pour afficher le graphe des préférences des étudiants,
-- `-v` ou `--verbose` pour afficher des informations détaillées pendant l'exécution.
+Other options are:
+- `-o` or `--output_file` to specify the output file (default is `groups.csv`),
+- `-p` or `--plot` to display the students' preference graph,
+- `-v` or `--verbose` to display detailed information during execution.
 
-Une fois exécuté, le script génère un fichier CSV contenant la répartition optimale des étudiants.
+Once executed, the script generates a CSV file containing the optimal distribution of students.
 
+## Affinity Matrix
 
-## Matrice d'affinité
+The **affinity matrix** is a square representation where each element `(i, j)` indicates the degree of preference or affinity of student `i` for student `j`. The scale depends on the number of students, and the score is calculated by `rank - total_number_of_students - 1` (0 by default). Thus, a high value indicates a strong affinity, while a low value indicates a weak affinity.
 
-La **matrice d'affinité** est une représentation carrée où chaque élément `(i, j)` indique le degré de préférence ou d'affinité de l'étudiant `i` pour l'étudiant `j`. L'echelle dépend du nombre d'étudiant, le score est calculé par `rang - nombre_etudiants_total - 1`, (0 par défault). Ainsi une valeur élevée indique une forte affinité, tandis qu'une valeur faible indique une faible affinité.
+**Example**:
 
-**Exemple** :
-
-|       | Étudiant A | Étudiant B | Étudiant C |
+|       | Student A | Student B | Student C |
 |-------|------------|------------|------------|
-| **Étudiant A** |     0      |     8      |     5      |
-| **Étudiant B** |     7      |     0      |     6      |
-| **Étudiant C** |     4      |     9      |     0      |
+| **Student A** |     0      |     8      |     5      |
+| **Student B** |     7      |     0      |     6      |
+| **Student C** |     4      |     9      |     0      |
 
-Dans cet exemple, l'étudiant A a une affinité de 8 pour l'étudiant B et de 5 pour l'étudiant C.
+In this example, Student A has an affinity of 8 for Student B and 5 for Student C.
 
-## Méthodes de formation des groupes
+## Group Formation Methods
 
-Différentes méthodes d'optimisation sont proposées pour former des groupes d'étudiants en fonction de leurs affinités mutuelles. Chaque méthode a ses propres avantages et inconvénients, et peut être plus ou moins adaptée en fonction du contexte. 
-Par défault, la méthode recommmandé est le **groupement par affinité** mutuelle qui comprend une gestion des étudiants isolés tout en maximisant les affinités entre les étudiants.
+Different optimization methods are proposed to form student groups based on their mutual affinities. Each method has its own advantages and disadvantages and may be more or less suitable depending on the context. By default, the recommended method is **mutual affinity grouping**, which includes managing isolated students while maximizing affinities between students.
 
-### Clustering hiérarchique
+### Hierarchical Clustering
 
-Le **clustering hiérarchique** est une méthode de regroupement qui cherche à créer une hiérarchie de clusters. Dans le contexte de ce script, il est légèrement adaptée, chaque étudiant commence comme un cluster individuel, et une paire d'étudiant maximisant l'affinité mutuelle est créer puis on ajoute progressivement les étudiants les plus compatibles jusqu'à atteindre la taille de groupe souhaitée. 
+**Hierarchical clustering** is a grouping method that seeks to create a hierarchy of clusters. In the context of this script, it is slightly adapted: each student starts as an individual cluster, and a pair of students maximizing mutual affinity is created, then the most compatible students are gradually added until the desired group size is reached.
 
-**Étapes de l'algorithme** :
+**Algorithm Steps**:
 
-1. **Initialisation** : Chaque étudiant est considéré comme un cluster individuel.
-2. **Recherche de la meilleure paire** : Identifier la paire d'étudiants non assignés ayant la plus grande affinité mutuelle.
-3. **Formation du groupe initial** : Créer un groupe avec cette paire et calculer son score.
-4. **Ajout progressif** : Ajouter au groupe les étudiants les plus compatibles jusqu'à atteindre la taille de groupe souhaitée.
-5. **Répétition** : Répéter les étapes 2 à 4 jusqu'à ce qu'il ne reste plus d'étudiants non assignés.
-6. **Gestion des restants** : Les étudiants restants sont ajoutés à de nouveaux groupes s'ils sont en nombre suffisant, sinon ils sont répartis dans les groupes existants.
+1. **Initialization**: Each student is considered an individual cluster.
+2. **Best Pair Search**: Identify the pair of unassigned students with the highest mutual affinity.
+3. **Initial Group Formation**: Create a group with this pair and calculate its score.
+4. **Gradual Addition**: Add the most compatible students to the group until the desired group size is reached.
+5. **Repetition**: Repeat steps 2 to 4 until no unassigned students remain.
+6. **Handling Remaining Students**: Remaining students are added to new groups if they are sufficient in number; otherwise, they are distributed among existing groups.
 
-**Calcul du score d'un groupe** :
+**Group Score Calculation**:
 
-Le score d'un groupe est la somme des affinités entre tous les membres du groupe. 
+The score of a group is the sum of affinities between all group members.
 
-**Avantages** :
+**Advantages**:
 <span style="color:green">
-1. Respecte les affinités : Les groupes sont formés en maximisant la somme des points entre les membres.
-2. Évolutif : On peut commencer avec des groupes de taille 2 et les étendre progressivement.
-3. Approche gloutonne simple : En fusionnant les groupes qui ont le plus fort score interne, on assure une bonne répartition.
+1. Respects affinities: Groups are formed by maximizing the sum of points between members.
+2. Scalable: Groups can start with a size of 2 and gradually expand.
+3. Simple greedy approach: By merging groups with the highest internal score, a good distribution is ensured.
 </span>
 
-**Limites possibles** :
+**Possible Limitations**:
 <span style="color:red">
-1. Piège du local-optimum : Une approche purement gloutonne risque d’enfermer certains élèves dans de mauvais groupes.
-2. Déséquilibre : Certains groupes pourraient être beaucoup plus optimaux que d'autres, créant des inégalités.
-3. Absence de diversité : Si certains élèves sont très populaires, ils risquent d’être regroupés en premier, laissant les autres avec peu d'affinités.
+1. Local optimum trap: A purely greedy approach may trap some students in poor groups.
+2. Imbalance: Some groups may be much more optimal than others, creating inequalities.
+3. Lack of diversity: If some students are very popular, they may be grouped first, leaving others with few affinities.
 </span>
 
+### Simulated Annealing
 
-### Recuit simulé
+**Simulated annealing** is a stochastic optimization technique inspired by the annealing process in metallurgy, where a material is heated and then gradually cooled to reach a minimal energy state. This method is used to avoid local minima by occasionally accepting less optimal solutions, with a probability that decreases over time. It adds a random dimension to group formation by allowing exchanges between students.
 
-Le **recuit simulé** est une technique d'optimisation stochastique inspirée du processus de recuit en métallurgie, où un matériau est chauffé puis refroidi progressivement pour atteindre un état énergétique minimal. Cette méthode est utilisée pour éviter les minima locaux en acceptant occasionnellement des solutions moins optimales, avec une probabilité qui diminue au fil du temps. Elle ajoute une dimension aléatoire à la formation des groupes en permettant des échanges entre les étudiants.
+**Algorithm Steps**:
 
-**Étapes de l'algorithme** :
+1. **Initialization**: Generate a random distribution of students into fixed-size groups.
+2. **Random Exchange**: Randomly select two students from different groups and exchange them.
+3. **Score Calculation**: Calculate the total score of the new group distribution.
+4. **Score Comparison**: If the new distribution improves the overall score, it is accepted.
+5. **Termination**: The algorithm stops when the overall score becomes very close to 1 or after a maximum number of iterations.
 
-1. **Initialisation** : Générer une répartition aléatoire des étudiants en groupes de taille fixe.
-2. **Échange aléatoire** : Sélectionner aléatoirement deux étudiants de deux groupes différents et les échanger.
-3. **Calcul du score** : Calculer le score total de la nouvelle répartition des groupes.
-4. **Comparaison des scores** : Si la nouvelle répartition améliore le score global, elle est acceptée. 
-5. **Arrêt** : L'algorithme s'arrête lorsque le score globale devient très proche de 1 ou après un nombre maximal d'itérations.
-
-**Avantages** :
+**Advantages**:
 <span style="color:green">
-1. Exploration de l'espace de recherche : La méthode aléatoire permet d'éviter les minima locaux et d'explorer différentes solutions.
-2. Adaptabilité : Le recuit simulé peut être ajusté pour accepter des solutions moins optimales au début,
-3. Flexibilité : Les échanges aléatoires permettent de tester différentes combinaisons de groupes.
+1. Exploration of the search space: The random method avoids local minima and explores different solutions.
+2. Adaptability: Simulated annealing can be adjusted to accept less optimal solutions at the beginning.
+3. Flexibility: Random exchanges allow testing different group combinations.
 </span>
 
-**Limites possibles** :
+**Possible Limitations**:
 <span style="color:red">
-1. Temps de calcul : Le recuit simulé peut nécessiter un grand nombre d'itérations pour converger vers une solution optimale.
-2. Risque de stagnation : Si l'algorithme reste bloqué dans une région de l'espace de recherche, il peut ne pas converger vers une solution optimale.
-3. Privilégie le score global : Le recuit simulé peut ne pas prendre en compte les affinités individuelles entre les étudiants. Des étudiants se classant mutuellement en premier peuvent être séparés au détriment du score global.
+1. Computation time: Simulated annealing may require a large number of iterations to converge to an optimal solution.
+2. Risk of stagnation: If the algorithm gets stuck in a region of the search space, it may not converge to an optimal solution.
+3. Prioritizes overall score: Simulated annealing may not consider individual affinities between students. Students ranking each other first may be separated for the sake of the overall score.
 </span>
 
-### Groupement par affinité mutuelle
+### Mutual Affinity Grouping
 
-Cette méthode consiste à former des groupes en maximisant les affinités mutuelles entre étudiants dès le départ. Elle fonctionne en sélectionnant les couples ou sous-groupes ayant les meilleures affinités avant de compléter progressivement les groupes.
+This method involves forming groups by maximizing mutual affinities between students from the start. It works by selecting pairs or subgroups with the best affinities before gradually completing the groups.
 
-**Étapes de l'algorithme** :
+**Algorithm Steps**:
 
-1. **Tri des affinités** : Former des groupes en partant des étudiants se classant mutuellement dans les N-1 premiers (N étant la taille du groupe).
-2. **Récupération des étudints isolés** : Ajouter les étudiants demandés par aucun autre étudiant en priorité avec leurs voeux.
-3. **Ajout des étudiants restants** : Créer des groupes d'un seul étudiant avec les étudiants restants.
-4. **Optimisation des groupes** : Fusionner les groupes ayant le plus d'affinités mutuelles jusqu'à atteindre la taille de groupe souhaitée.
+1. **Affinity Sorting**: Form groups starting with students mutually ranking each other in the top N-1 (N being the group size).
+2. **Handling Isolated Students**: Add students not requested by any other student in priority with their preferences.
+3. **Adding Remaining Students**: Create single-student groups with the remaining students.
+4. **Group Optimization**: Merge groups with the highest mutual affinities until the desired group size is reached.
 
-**Avantages** :
+**Advantages**:
 <span style="color:green">
-1. Maximisation des affinités : Les étudiants mutuellement d'accord pour être ensemble sont regroupés en priorité.
-
-2. Gestion des étudiants isolés : Les étudiants peux demandés sont regroupés en priorité pour éviter qu'ils se retrouvent isolés.
-
-3. Équilibre des groupes : Les groupes sont formés de manière à équilibrer le score globale pour les étudiants qui n'ont pas de grande préférences.
+1. Maximizes affinities: Students mutually agreeing to be together are grouped in priority.
+2. Manages isolated students: Less requested students are grouped in priority to avoid isolation.
+3. Balances groups: Groups are formed to balance the overall score for students with no strong preferences.
 </span>
 
-**Limites possibles** :
+**Possible Limitations**:
 <span style="color:red">
-1. Risque d'isoler certains étudiants : Les étudiants ayant des affinités faibles avec les autres peuvent se retrouver isolés.
-2. Manque de diversité : Les groupes formés peuvent manquer de diversité si la majorité des étudiants se classent mutuellement en premier.
+1. Risk of isolating some students: Students with low affinities with others may end up isolated.
+2. Lack of diversity: Formed groups may lack diversity if most students mutually rank each other first.
 </span>
 
 ## Contributions
-- Version 1.0.0 : [Mélissa Colin](https://github.com/ddsmlf) : Développement du script initial avec les méthodes de clustering hiérarchique, de recuit simulé et de groupement par affinité mutuelle.
+- Version 1.0.0: [Mélissa Colin](https://github.com/ddsmlf): Development of the initial script with hierarchical clustering, simulated annealing, and mutual affinity grouping methods.

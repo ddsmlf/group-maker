@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import re
 import networkx as nx
-import random
-import names
 
 class AffinityMatrixGenerator:
     """
@@ -113,6 +111,18 @@ class AffinityMatrixGenerator:
         sm.set_array([])
         plt.colorbar(sm, ax=plt.gca(), label='Preference Score')
         plt.title('Student Preference Graph')
+        plt.show()
+
+    def plot_matrix(self):
+        """
+        Plots the affinity matrix as a heatmap using matplotlib.
+        """
+        plt.figure(figsize=(12, 8))
+        plt.imshow(self.matrix, cmap='Blues', interpolation='nearest')
+        plt.colorbar(label='Affinity Score')
+        plt.xticks(ticks=np.arange(self.number_of_students), labels=self.students, rotation=90)
+        plt.yticks(ticks=np.arange(self.number_of_students), labels=self.students)
+        plt.title('Affinity Matrix')
         plt.show()
 
 if __name__ == "__main__":
