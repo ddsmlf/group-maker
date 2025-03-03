@@ -157,7 +157,6 @@ class GroupMaker:
 
                 choice_preferences = self.__get_preferences(choice)
                 if student in choice_preferences[:current_rank-1]:
-                    print(f"Found mutual preference between {student} and {choice}")
                     if student not in assigned_students:
                         mutual_groups.append([student])
                         assigned_students.add(student)
@@ -231,7 +230,26 @@ class GroupMaker:
                 best_group.append(student)
 
         self.groups = new_groups
-        assert sum(len(g) for g in self.groups) == len(self.__students), "Error: Some students are not assigned!"
+        print(remaining_students)
+        # if len(remaining_students) <= self.group_size / 2:
+        #     for student in remaining_students:
+        #         # trouver le groupe avec le meilleur score pour chaque etduaint et peut importe sa taille l'ajouté dans le bon group de self.groups
+        #         for group in self.groups:
+        #             max_score = 0
+        #             max_group = []
+        #             if student in group:
+        #                 score_actual = self.__compute_score(group)
+        #                 score_with_student = self.__compute_score(group + [student])
+        #                 if score_actual - score_with_student > max_score:
+        #                     max_score = score_actual - score_with_student   
+        #                     max_group = group
+        #         if len(max_group) <= self.group_size:
+        #             max_group.append(student)  
+        if len(remaining_students) > 0:
+            self.groups.append(list(remaining_students))
+
+
+
 
     def affinity_grouping(self):
         """

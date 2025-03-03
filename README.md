@@ -165,3 +165,6 @@ This method involves forming groups by maximizing mutual affinities between stud
 
 ## Contributions
 - Version 1.0.0: [Mélissa Colin](https://github.com/ddsmlf): Development of the initial script with hierarchical clustering, simulated annealing, and mutual affinity grouping methods.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

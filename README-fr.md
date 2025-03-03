@@ -170,3 +170,6 @@ Cette méthode consiste à former des groupes en maximisant les affinités mutue
 
 ## Contributions
 - Version 1.0.0 : [Mélissa Colin](https://github.com/ddsmlf) : Développement du script initial avec les méthodes de clustering hiérarchique, de recuit simulé et de groupement par affinité mutuelle.
+
+## Licence
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
